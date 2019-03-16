@@ -1,3 +1,5 @@
+const VisualRegressionLauncher = require("../../lib").default;
+
 require("babel-register");
 
 var path = require('path');
@@ -10,12 +12,11 @@ exports.config = {
   ],
   capabilities: [
     {
-      browserName: 'phantomjs',
-      'phantomjs.binary.path': require('phantomjs').path,
+      browserName: 'firefox'
     }
   ],
   sync: false,
-  logLevel: 'silent',
+  logLevel: 'info',
   coloredLogs: true,
 
   baseUrl: 'http://webdriver.io',
@@ -34,12 +35,14 @@ exports.config = {
   },
   services: [
     'selenium-standalone',
-    require('../../src')
   ],
+  before: function (capabilities, specs) {
+    return new VisualRegressionLauncher().before(capabilities, specs);
+  },
   visualRegression: {
     compare: compareMethod,
     viewportChangePause: 250,
-    viewports: [{ width: 600, height: 1000 }],
+    viewports: [{width: 600, height: 1000}],
   },
   // Options for selenium-standalone
   // Path where all logs from the Selenium server should be stored.

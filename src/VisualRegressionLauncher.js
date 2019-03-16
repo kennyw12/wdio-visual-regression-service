@@ -1,6 +1,8 @@
 import _ from 'lodash';
 import { parse as parsePlatform } from 'platform';
-import { makeElementScreenshot, makeDocumentScreenshot, makeViewportScreenshot } from 'wdio-screenshot';
+import makeElementScreenshot from './modules/makeElementScreenshot';
+import makeDocumentScreenshot from './modules/makeDocumentScreenshot';
+import makeViewportScreenshot from './modules/makeViewportScreenshot';
 
 import getUserAgent from './scripts/getUserAgent';
 import { mapViewports, mapOrientations } from './modules/mapViewports';
@@ -36,13 +38,13 @@ export default class VisualRegressionLauncher {
    * @return {Promise}
    */
   async before(capabilities, specs) {
-    this.validateConfig(browser.options);
+    this.validateConfig(browser.config);
 
-    this.compare = browser.options.visualRegression.compare;
-    this.viewportChangePause = _.get(browser.options, 'visualRegression.viewportChangePause', 100);
-    this.viewports = _.get(browser.options, 'visualRegression.viewports');
-    this.orientations = _.get(browser.options, 'visualRegression.orientations');
-    const userAgent = (await browser.execute(getUserAgent)).value;
+    this.compare = browser.config.visualRegression.compare;
+    this.viewportChangePause = _.get(browser.config, 'visualRegression.viewportChangePause', 100);
+    this.viewports = _.get(browser.config, 'visualRegression.viewports');
+    this.orientations = _.get(browser.config, 'visualRegression.orientations');
+    const userAgent = (await browser.execute(getUserAgent));
     const { name, version, ua } = parsePlatform(userAgent);
 
     this.context = {
